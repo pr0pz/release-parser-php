@@ -40,7 +40,7 @@ class ReleasePatterns {
 	// Season pattern matches: S01E01 / 1x01 / S01D01
 	const REGEX_SEASON = '/[._-](?:(?:[ST]|saison|staffel|temp)[._-]?(\d+)[._-]?(?:(?:ep?|eps[._-]?|episode[._-]?|f(?:olge[._-]?)|d|di[cks][cks][._-]?|cd[._-]?|dvd[._-]?)\d+)?|(\d+)(?:x\d+))[._-]/i';
 	// Basic title pattern
-	const REGEX_TITLE = '([\w.()-]+)';
+	const REGEX_TITLE = '([\w\\&.()-]+)';
 	// Good for Ebooks
 	const REGEX_TITLE_EBOOK = '/^' . self::REGEX_TITLE . '[._(-]+(?:%year%|%language%|%flags%|%format%|%regex_date%|%regex_date_monthname%|ebook)[._)-]/iU';
 	// Good for Fonts
