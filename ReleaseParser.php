@@ -9,7 +9,7 @@ require_once __DIR__ . '/ReleasePatterns.php';
  *
  * @package ReleaseParser
  * @author Wellington Estevo
- * @version 1.4.4
+ * @version 1.5.0
  */
 
 class ReleaseParser extends ReleasePatterns
@@ -36,6 +36,7 @@ class ReleaseParser extends ReleasePatterns
 		'os'			=> \null, // For Software/Game rls
 		'version'		=> \null, // For Software/Game rls
 		'language'		=> \null, // Array with language code as key and name as value (in english)
+		'country'		=> \null, // Release country
 		'type'			=> \null,
 	];
 
@@ -78,6 +79,7 @@ class ReleaseParser extends ReleasePatterns
 
 		$this->parseType( $section );
 		$this->parseTitle();			// Title and extra title
+		$this->parseCountry();			// Parses Release country
 		$this->cleanupAttributes();	// Clean up unneeded and falsely parsed attributes
 	}
 
@@ -746,6 +748,34 @@ class ReleaseParser extends ReleasePatterns
 		}
 	}
 
+	
+	/**
+	 * Parses Release country and strips it from title.
+	 * 
+	 * @return void
+	 */
+	private function parseCountry()
+	{
+		if ( !\strtolower( $this->get( 'type' ) ) === 'tv' ) return;
+
+		$title_words = \explode( ' ', $this->get( 'title' ) );
+		$last_element = array_key_last( $title_words );
+		$countries = '/^(US|UK|NZ|AU|CA|BE)$/i';
+		$invalid_words_before = '/^(the|of|with|and|between|to)$/i';
+
+		if ( $last_element === 0 ) return;
+
+		if (
+			preg_match( $countries, $title_words[ $last_element ] ) &&
+			!preg_match( $invalid_words_before, $title_words[ $last_element - 1 ] )
+		)
+		{
+			$this->set( 'country', $title_words[ $last_element ] );
+			unset( $title_words[ $last_element ] );
+			$this->set( 'title', join( ' ', $title_words ) );
+		}
+	}
+
 
 	/**
 	 * Parse Bookware type.
@@ -968,6 +998,14 @@ class ReleaseParser extends ReleasePatterns
 			if ( \preg_match( self::REGEX_DATE_MUSIC, $this->get( 'release' ) ) )
 			{
 				$type = 'MusicVideo';
+			}
+			// Probably movie if not episode and season given
+			else if (
+				empty( $this->get( 'episode') ) &&
+				empty( $this->get( 'season') )
+			)
+			{
+				$type = 'Movie';
 			}
 		}
 		// Description with date inside brackets is nearly always music or musicvideo

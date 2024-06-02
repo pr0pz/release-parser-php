@@ -6,7 +6,7 @@ namespace ReleaseParser;
  *
  * @package ReleaseParser
  * @author Wellington Estevo
- * @version 1.4.4
+ * @version 1.5.0
  */
 
 class ReleasePatterns {
@@ -27,7 +27,7 @@ class ReleasePatterns {
 	const REGEX_YEAR_SIMPLE = '(19\d[\dx]|20\d[\dx])';
 	const REGEX_YEAR = '/(?=[(._-]' . self::REGEX_YEAR_SIMPLE . '[)._-])/i';
 	// Extract group
-	const REGEX_GROUP = '/-([\w.]+)$/i';
+	const REGEX_GROUP = '/-([\w.\[\]]+)$/i';
 	// Extract OS
 	//const REGEX_OS = '';
 	// Episode pattern matches: S01E01 / 1x01 / E(PS)1 / OVA1 / F123 / Folge_123 / Episode 1 / Issue 1 etc.
@@ -38,9 +38,9 @@ class ReleasePatterns {
 	// For Disc numbers: Disc1 / DVD1 / CD1 / (S01)D01
 	const REGEX_DISC = '(?:s\d+[._-]?)?(?:d|di[cks][cks]|cd|dvd)[._-]?(\d+)';
 	// Season pattern matches: S01E01 / 1x01 / S01D01
-	const REGEX_SEASON = '/[._-](?:(?:[ST]|saison|staffel|temp)[._-]?(\d+)[._-]?(?:(?:ep?|eps[._-]?|episode[._-]?|f(?:olge[._-]?)|d|di[cks][cks][._-]?|cd[._-]?|dvd[._-]?)\d+)?|(\d+)(?:x\d+))[._-]/i';
+	const REGEX_SEASON = '/[._-](?:(?:[ST]|saison[._-]?|staffel[._-]?|temp[._-]?)(\d+)[._-]?(?:(?:ep?|eps[._-]?|episode[._-]?|f(?:olge[._-]?)|d|di[cks][cks][._-]?|cd[._-]?|dvd[._-]?)\d+)?|(\d+)(?:x\d+))[._-]/i';
 	// Basic title pattern
-	const REGEX_TITLE = '([\w.()-]+)';
+	const REGEX_TITLE = '([\w&.()-]+)';
 	// Good for Ebooks
 	const REGEX_TITLE_EBOOK = '/^' . self::REGEX_TITLE . '[._(-]+(?:%year%|%language%|%flags%|%format%|%regex_date%|%regex_date_monthname%|ebook)[._)-]/iU';
 	// Good for Fonts
@@ -171,6 +171,7 @@ class ReleasePatterns {
 		'PPV' => 'PPV(?:[._-]?RIP)?', // Pay-per-view
 		'PSN' => 'PSN', // Playstation Network
 		'RAWRiP' => 'Rawrip', // Anime
+		'Roku' => 'Roku', // (P2P)
 		'SAT' => 'sat', // Analog Satellite
 		'Scan' => 'scan',
 		'Screener' => '(b[dr]+|bluray|dvd|vhs?|t[cs]|line)?.?(scr|screener)',
@@ -333,6 +334,8 @@ class ReleasePatterns {
 	// Game Console patterns
 	const DEVICE = [
 		'3DO' => '3DO',
+		'Analogue Pocket' => 'POCKET',
+		'Atari Jaguar' => 'JAG',
 		//'Bandai WonderSwan' => 'WS',
 		'Bandai WonderSwan Color' => 'WSC',
 		'Commodore Amiga' => 'AMIGA',
@@ -358,6 +361,7 @@ class ReleasePatterns {
 		'Playstation Vita' => 'PSV',
 		'Pocket PC' => 'PPC\d*',
 		'Sega Dreamcast' => [ 'DC$', 'DREAMCAST' ],
+		'Sega Master System' => 'SMS$',
 		'Sega Mega CD' => 'MEGACD',
 		'Sega Mega Drive' => 'SMD',
 		'Sega Saturn' => 'SATURN$',
@@ -738,7 +742,7 @@ class ReleasePatterns {
 	];
 
 	const GROUPS_GAMES = [
-		'0x0007', '0x0815', '1C', 'ABSiSO', 'ACTiVATED', 'ADDONiA', 'ALiAS', 'ANOMALY', 'AUGETY', 'AVENGED', 'BACKLASH', 'bADkARMA', 'Bamboocha', 'BAT', 'BAZOOKA', 'BFHiSO', 'BiTE', 'BLASTCiTY', 'BReWErS', 'BREWS', 'BREWZ', 'CiFE', 'CLONECD', 'CLS', 'CODEX', 'COGENT', 'CUBiC', 'CXZiSO', 'DARKSiDERS', 'DARKZER0', 'DELiGHT', 'DEViANCE', 'DINOByTES', 'DOGE', 'DVN', 'DVNiSO', 'DYNAMIX', 'ENiGMA', 'FANiSO', 'FAS', 'FASiSO', 'FASDOX', 'FCKDRM', 'FLT', 'FLTDOX', 'GENESIS', 'gimpsRus', 'GMiSO', 'GOW', 'GREENPEACE', 'HATRED', 'HBD', 'HEiST', 'HI2U', 'HOODLUM', 'HR', 'HYBRID', 'I_KnoW', 'iMMERSiON', 'iNLAWS', 'iTWINS', 'JAGDOX', 'JAGUAR', 'LiGHTFORCE', 'LUMA', 'MONEV', 'MYSTERY', 'MYTH', 'NiiNTENDO', 'NNSSWW', 'OUTLAWS', 'PiKMiN', 'PiMoCK', 'PiZZA', 'PiZZADOX', 'PLAZA', 'POSTMORTEM', 'PRELUDE', 'PROPHET', 'PS5B', 'PUSSYCAT', 'PWZ', 'TENOKE', 'TENOKE1', 'THG', 'TiNYiSO', 'TRSi', 'TSC', 'RELOADED', 'RAZOR', 'Razor1911', 'RAZORCD', 'RazorDOX', 'ReVOLVeR', 'RiTUEL', 'RUNE', 'SCRUBS', 'SiLENTGATE', 'SiMPLEX', 'SKIDROW', 'SMACKs', 'Souldrinker', 'SPLATTER', 'SPLATTERKiNGS', 'STEAMPUNKS', 'STRANGE', 'SUXXORS', 'TDUJAM', 'TECHNiC', 'TEDOX', 'TNT', 'VACE', 'VENGEANCE', 'VENOM', 'ViTALiTY', 'VREX', 'Unleashed', 'YOUCANTNUKE', 'ZEKE'
+		'0x0007', '0x0815', '1C', 'ABSiSO', 'ACTiVATED', 'ADDONiA', 'ALiAS', 'ANOMALY', 'AUGETY', 'AVENGED', 'BACKLASH', 'bADkARMA', 'Bamboocha', 'BAT', 'BAZOOKA', 'BFHiSO', 'BiTE', 'BLASTCiTY', 'BReWErS', 'BREWS', 'BREWZ', 'CiFE', 'CLONECD', 'CLS', 'CODEX', 'COGENT', 'CUBiC', 'CXZiSO', 'DARKSiDERS', 'DARKZER0', 'DELiGHT', 'DEViANCE', 'DINOByTES', 'DOGE', 'DVN', 'DVNiSO', 'DYNAMIX', 'ENiGMA', 'FANiSO', 'FAS', 'FASiSO', 'FASDOX', 'FCKDRM', 'FLT', 'FLTDOX', 'GENESIS', 'gimpsRus', 'GMiSO', 'GOW', 'GREENPEACE', 'HATRED', 'HBD', 'HEiST', 'HHT', 'HI2U', 'HOODLUM', 'HR', 'HYBRID', 'I_KnoW', 'iMMERSiON', 'iNLAWS', 'iTWINS', 'JAGDOX', 'JAGUAR', 'LiGHTFORCE', 'LUMA', 'MONEV', 'MYSTERY', 'MYTH', 'NiiNTENDO', 'NNSSWW', 'OUTLAWS', 'PiKMiN', 'PiMoCK', 'PiZZA', 'PiZZADOX', 'PLAZA', 'POSTMORTEM', 'PRELUDE', 'PROPHET', 'PS5B', 'PUSSYCAT', 'PWZ', 'TENOKE', 'TENOKE1', 'THG', 'TiNYiSO', 'TRSi', 'TSC', 'RELOADED', 'RAZOR', 'Razor1911', 'RAZORCD', 'RazorDOX', 'ReVOLVeR', 'RiTUEL', 'RUNE', 'SCRUBS', 'SiLENTGATE', 'SiMPLEX', 'SKIDROW', 'SMACKs', 'Souldrinker', 'SPLATTER', 'SPLATTERKiNGS', 'STEAMPUNKS', 'STRANGE', 'SUXXORS', 'TDUJAM', 'TECHNiC', 'TEDOX', 'TNT', 'VACE', 'VENGEANCE', 'VENOM', 'ViTALiTY', 'VREX', 'Unleashed', 'YOUCANTNUKE', 'ZEKE'
 	];
 
 	const GROUPS_APPS = [
